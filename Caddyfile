@@ -84,11 +84,7 @@
 		}
 	}
 
-	# the handle_path directive WILL strip /v1/ from the path before proxying
-	# use `handle` instead of `handle_path` if you dont want to strip the /v1/ path
-	# this is needed if your backend's v1 routes don't start with /v1/
-	# change paths as needed
-	handle_path {$BACKEND_PATH:/v1}/* {
+	handle {$BACKEND_PATH:/v1}/* {
 		# the /v1/ prefix WILL be stripped from the uri sent to the proxy host
 		#
 		# proxy all requests for /v1/* to the backend, configure this variable in the service settings
@@ -113,11 +109,7 @@
 		}
 	}
 
-	# the handle_path directive WILL strip /websocket/ from the path before proxying
-	# use `handle` instead of `handle_path` if you dont want to strip the /websocket/ path
-	# this is needed if your backend's websocket routes don't start with /websocket/
-	# change paths as needed
-	handle_path {$BACKEND_PATH:/websocket}/* {
+	handle {$BACKEND_PATH:/websocket}/* {
 		# the /websocket/ prefix WILL be stripped from the uri sent to the proxy host
 		#
 		# proxy all requests for /websocket/* to the backend, configure this variable in the service settings
