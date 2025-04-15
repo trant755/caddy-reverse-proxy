@@ -35,23 +35,26 @@
 		format json # set access log format to json mode
 	}
 
-	route /socket.io/* {
-		reverse_proxy {
-			dynamic a {
-				name {$BACKEND_DOMAIN}
-				port {$BACKEND_PORT}
-				refresh 1s
-				dial_timeout 30s
-				versions ipv4 ipv6
-			}
-			import lb_settings
-			import passive_health_checks
-
-			header_up Host {upstream_hostport}
-			header_up Upgrade {http_upgrade}
-			header_up Connection {http_connection}
+	handle_path /socket.io/* {
+	reverse_proxy {
+		dynamic a {
+			name {$BACKEND_DOMAIN}
+			port {$BACKEND_PORT}
+			refresh 1s
+			dial_timeout 30s
+			versions ipv4 ipv6
 		}
+
+		import lb_settings
+		import passive_health_checks
+
+		header_up Host {upstream_hostport}
+		header_up Upgrade {http_upgrade}
+		header_up Connection {http_connection}
 	}
+}
+
+
 
 	# the handle_path directive WILL strip /api/ from the path before proxying
 	# use `handle` instead of `handle_path` if you dont want to strip the /api/ path
@@ -82,7 +85,7 @@
 		}
 	}
 
-	# proxy all requests for /* to the frontend, configure these variables in the service settings
+		# proxy all requests for /* to the frontend, configure these variables in the service settings
 	reverse_proxy {
 		# for private networking replicas are exposed as multiple dns results, use those dns results as the upstreams
 		dynamic a {
