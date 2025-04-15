@@ -34,6 +34,22 @@
 		format json # set access log format to json mode
 	}
 
+	handle /socket.io/* {
+	reverse_proxy {
+		dynamic a {
+			name {$BACKEND_DOMAIN}
+			port {$BACKEND_PORT}
+		}
+		import lb_settings
+		import passive_health_checks
+
+		header_up Host {upstream_hostport}
+		header_up Upgrade {http_upgrade}
+		header_up Connection {http_connection}
+	}
+}
+
+
 	# proxy all requests for /* to the frontend, configure these variables in the service settings
 	reverse_proxy {
 		# for private networking replicas are exposed as multiple dns results, use those dns results as the upstreams
