@@ -35,7 +35,7 @@
 		format json # set access log format to json mode
 	}
 
-	handle_path socket.io/* {
+	handle_path /socket.io/* {
 	reverse_proxy {
 		dynamic a {
 			name {$BACKEND_DOMAIN}
@@ -49,6 +49,10 @@
 		import passive_health_checks
 
 		header_up Host {upstream_hostport}
+		header_up X-Real-IP {remote}
+		header_up X-Forwarded-For {remote}
+    	header_up X-Forwarded-Proto {scheme}
+
 		header_up Upgrade {http_upgrade}
 		header_up Connection {http_connection}
 	}
