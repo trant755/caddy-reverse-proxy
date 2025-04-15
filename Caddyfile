@@ -38,13 +38,7 @@
 	handle /socket.io/* {
 		log {
 			output stdout
-			format json {
-				time_format "iso8601"
-				message "WebSocket connection"
-				extra "path" {http.request.uri.path}
-				extra "upstream" {upstream_hostport}
-				extra "headers" {http.request.header}
-			}
+			format json
 		}
 		reverse_proxy {
 			dynamic a {
