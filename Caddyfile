@@ -35,7 +35,7 @@
 		format json # set access log format to json mode
 	}
 
-	handle_path /socket.io/* {
+	handle_path socket.io/* {
 	reverse_proxy {
 		dynamic a {
 			name {$BACKEND_DOMAIN}
