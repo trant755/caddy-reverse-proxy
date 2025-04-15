@@ -36,6 +36,16 @@
 
 	# WebSocket проксирование
 	handle /socket.io/* {
+		log {
+			output stdout
+			format json {
+				time_format "iso8601"
+				message "WebSocket connection"
+				extra "path" {http.request.uri.path}
+				extra "upstream" {upstream_hostport}
+				extra "headers" {http.request.header}
+			}
+		}
 		reverse_proxy {
 			dynamic a {
 				name {$BACKEND_DOMAIN}
@@ -44,7 +54,6 @@
 				dial_timeout 30s
 				versions ipv4 ipv6
 			}
-
 			import lb_settings
 			import passive_health_checks
 
@@ -54,7 +63,6 @@
 			header_up Connection {http_connection}
 		}
 	}
-
 
 	# proxy all requests for /* to the frontend, configure these variables in the service settings
 	reverse_proxy {
